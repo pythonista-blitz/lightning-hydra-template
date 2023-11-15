@@ -20,18 +20,18 @@ def test_train_config(cfg_train: DictConfig) -> None:
     hydra.utils.instantiate(cfg_train.trainer)
 
 
-def test_eval_config(cfg_eval: DictConfig) -> None:
-    """Tests the evaluation configuration provided by the `cfg_eval` pytest fixture.
+def test_predict_config(cfg_predict: DictConfig) -> None:
+    """Tests the prediction configuration provided by the `cfg_predict` pytest fixture.
 
-    :param cfg_train: A DictConfig containing a valid evaluation configuration.
+    :param cfg_train: A DictConfig containing a valid prediction configuration.
     """
-    assert cfg_eval
-    assert cfg_eval.data
-    assert cfg_eval.model
-    assert cfg_eval.trainer
+    assert cfg_predict
+    assert cfg_predict.data
+    assert cfg_predict.model
+    assert cfg_predict.trainer
 
-    HydraConfig().set_config(cfg_eval)
+    HydraConfig().set_config(cfg_predict)
 
-    hydra.utils.instantiate(cfg_eval.data)
-    hydra.utils.instantiate(cfg_eval.model)
-    hydra.utils.instantiate(cfg_eval.trainer)
+    hydra.utils.instantiate(cfg_predict.data)
+    hydra.utils.instantiate(cfg_predict.model)
+    hydra.utils.instantiate(cfg_predict.trainer)

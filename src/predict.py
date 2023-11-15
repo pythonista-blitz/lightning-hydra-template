@@ -1,7 +1,10 @@
 from typing import Any, Dict, List, Tuple
 
 import hydra
+import numpy as np
+import pandas as pd
 import rootutils
+import torch
 from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
 from omegaconf import DictConfig
@@ -28,6 +31,7 @@ from src.utils import (
     RankedLogger,
     extras,
     instantiate_loggers,
+    kaggle,
     log_hyperparameters,
     task_wrapper,
 )
@@ -35,9 +39,8 @@ from src.utils import (
 log = RankedLogger(__name__, rank_zero_only=True)
 
 
-@task_wrapper
-def evaluate(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    """Evaluates given checkpoint on a datamodule testset.
+def predict(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """Predicts given checkpoint on a datamodule predictset.
 
     This method is wrapped in optional @task_wrapper decorator, that controls the behavior during
     failure. Useful for multiruns, saving info about the crash, etc.
@@ -71,20 +74,20 @@ def evaluate(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         log.info("Logging hyperparameters!")
         log_hyperparameters(object_dict)
 
-    log.info("Starting testing!")
-    trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)
+    # log.info("Starting testing!")
+    # trainer.test(model=model, datamodule=datamodule, ckpt_path=cfg.ckpt_path)
 
+    log.info("Starting predict!")
     # for predictions use trainer.predict(...)
-    # predictions = trainer.predict(model=model, dataloaders=dataloaders, ckpt_path=cfg.ckpt_path)
+    predictions = trainer.predict(model=model, dataloaders=datamodule, ckpt_path=cfg.ckpt_path)
+    flat_predictions = np.concatenate([tensor.numpy() for tensor in predictions])
 
-    metric_dict = trainer.callback_metrics
-
-    return metric_dict, object_dict
+    return flat_predictions, object_dict
 
 
-@hydra.main(version_base="1.3", config_path="../configs", config_name="eval.yaml")
+@hydra.main(version_base="1.3", config_path="../configs", config_name="predict.yaml")
 def main(cfg: DictConfig) -> None:
-    """Main entry point for evaluation.
+    """Main entry point for prediction.
 
     :param cfg: DictConfig configuration composed by Hydra.
     """
@@ -92,7 +95,8 @@ def main(cfg: DictConfig) -> None:
     # (e.g. ask for tags if none are provided in cfg, print cfg tree, etc.)
     extras(cfg)
 
-    evaluate(cfg)
+    result, object_dict = predict(cfg)
+    kaggle.generate_submission(cfg.submit_file_path, cfg.predict_col, result)
 
 
 if __name__ == "__main__":

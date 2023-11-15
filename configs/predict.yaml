@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: mnist # choose datamodule with `predict_dataloader()` for prediction
+  - model: mnist
+  - logger: null
+  - trainer: default
+  - paths: default
+  - extras: default
+  - hydra: default
+
+task_name: "predict"
+
+tags: ["dev"]
+
+# passing checkpoint path is necessary for prediction
+ckpt_path: ./logs/train/runs/2023-11-08_21-56-03/checkpoints/last.ckpt
