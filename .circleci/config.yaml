@@ -51,7 +51,7 @@ jobs:
           command: kaggle datasets version -p ./kaggle_datasets_git -m $CIRCLE_SHA1 -d
 
 workflows:
-  version: 2
+  version: 1
   test:
     jobs:
       - test
