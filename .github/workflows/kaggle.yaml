@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.9
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run isort
+        run: isort .
+
+      - name: Run black
+        run: black .
+
+      - name: Run tests
+        run: pytest -k "not slow"
+
+      - name: Run flake8
+        run: flake8
+
+      - name: Run mypy
+        run: mypy ./ --ignore-missing
+
+  kaggle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9.9
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Create ZIP archive
+        run: zip -r ./kaggle_datasets_git/mykaggle.zip * -x "kaggle_datasets_git/*"
+
+      - name: Upload to Kaggle dataset
+        run: kaggle datasets version -p ./kaggle_datasets_git -m ${{ github.sha }} -d
