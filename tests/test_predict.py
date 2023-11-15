@@ -37,4 +37,4 @@ def test_train_predict(
     flat_predictions, _ = predict(cfg_predict)
 
     # Check the shape of flat_predictions
-    assert flat_predictions.shape == (10000, 1)
+    assert flat_predictions.shape == (10000,)
