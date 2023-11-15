@@ -5,7 +5,7 @@ on:
     branches:
       - main
 
-jobs:Kaggle
+jobs:
   test:
     runs-on: ubuntu-latest
 
