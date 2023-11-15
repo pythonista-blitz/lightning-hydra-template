@@ -4,14 +4,13 @@ from pathlib import Path
 import pytest
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, open_dict
+
 from src.predict import predict
 from src.train import train
 
 
 @pytest.mark.slow
-def test_train_predict(
-    tmp_path: Path, cfg_train: DictConfig, cfg_predict: DictConfig
-) -> None:
+def test_train_predict(tmp_path: Path, cfg_train: DictConfig, cfg_predict: DictConfig) -> None:
     """Tests training and evaluation by training for 1 epoch with `train.py` then predicting with
     `predict.py`.
 
