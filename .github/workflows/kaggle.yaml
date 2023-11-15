@@ -2,8 +2,7 @@ name: KaggleCI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   test:
@@ -34,15 +33,14 @@ jobs:
       - name: Run black
         run: black .
 
-      - name: Run tests
-        run: pytest -k "not slow"
-
       - name: Run flake8
         run: flake8
 
       - name: Run mypy
         run: mypy ./ --ignore-missing
 
+      - name: Run tests
+        run: pytest -k "not slow"
   kaggle:
     runs-on: ubuntu-latest
 

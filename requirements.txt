@@ -55,3 +55,8 @@ boto3                  # AWS SDK for Python, for interacting with AWS services l
 
 # --------- Additional Utilities --------- #
 kaggle                       # For interacting with Kaggle datasets and competitions
+
+# --------- Code Formatting and Linting --------- #
+isort                  # Tool for sorting imports alphabetically
+black                  # Code formatter
+flake8                 # Linting tool for Python code

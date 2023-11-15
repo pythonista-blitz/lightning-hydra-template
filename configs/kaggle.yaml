@@ -2,8 +2,8 @@
 
 defaults:
   - _self_
-  - competition_name: 'titanic'
+  - competition_name: "titanic"
 
 submit_file_path: ../input/${competition_name}/submission.csv
 
-predict_col: 'Survive'
+predict_col: "Survive"
