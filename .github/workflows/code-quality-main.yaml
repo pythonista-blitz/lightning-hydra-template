@@ -15,10 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Clear Python cache
+        run: |
+          sudo rm -rf $RUNNER_TOOL_CACHE/Python
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9.9
+          python-version: 3.9.x
 
       - name: Run pre-commits
         uses: pre-commit/action@v2.0.3
