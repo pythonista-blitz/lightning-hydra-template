@@ -1,22 +1,27 @@
-name: CI
+name: KaggleCI
 
 on:
   push:
     branches:
-      - master
+      - main
 
-jobs:
+jobs:Kaggle
   test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
         with:
-          python-version: 3.9.9
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
@@ -46,10 +51,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Python 3.9.9
+        uses: actions/setup-python@v3
         with:
-          python-version: 3.9.9
+          python-version: "3.9.9"
 
       - name: Install dependencies
         run: |
